@@ -1,0 +1,41 @@
+#Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      initContainers:
+          - name: wait-for-rabbitmq
+            image: appropriate/curl:latest
+            command: ["sh", "-c", "until curl -f http://rabbitmq:15672; do echo waiting for RabbitMQ; sleep 5; done;"]
+      containers:
+        - name: admin
+          image: shreedev44/crud-admin-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4041
+
+
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-service
+spec: 
+  type: LoadBalancer
+  selector: 
+    app: admin
+  ports:
+    - protocol: TCP
+      port: 4041
+      targetPort: 4041

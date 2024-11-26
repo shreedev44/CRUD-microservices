@@ -1,0 +1,37 @@
+#Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: shreedev44/crud-api-gateway:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4040
+
+
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+spec: 
+  type: LoadBalancer
+  selector: 
+    app: api-gateway
+  ports:
+    - protocol: TCP
+      port: 4040
+      targetPort: 4040

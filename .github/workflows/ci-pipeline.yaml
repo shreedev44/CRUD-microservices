@@ -1,0 +1,63 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+      branches:
+        - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+
+      - name: Install Dependencies
+        run: npm install
+
+
+      - name: Run Tests
+        run: echo "Skipping tests for now" && exit 0
+
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: build-test
+
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+      - name: Build and Push Docker Images
+        run: |
+          docker build -t shreedev44/crud-api-gateway:latest ./api-gateway
+          docker build -t shreedev44/crud-user-service:latest ./backend/user-service
+          docker build -t shreedev44/crud-admin-service:latest ./backend/admin-service
+          docker build -t shreedev44/crud-notification-service:latest ./backend/notification-service
+          docker build -t shreedev44/crud-frontend:latest ./frontend
+
+
+          docker push shreedev44/crud-api-gateway:latest
+          docker push shreedev44/crud-user-service:latest
+          docker push shreedev44/crud-admin-service:latest
+          docker push shreedev44/crud-notification-service:latest
+          docker push shreedev44/crud-frontend:latest

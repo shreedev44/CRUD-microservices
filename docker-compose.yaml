@@ -1,0 +1,53 @@
+services:
+  api-gateway:
+    image: shreedev44/crud-api-gateway
+    container_name: api-gateway
+    ports:
+      - "4040:4040"
+    depends_on:
+      - admin-service
+      - user-service
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin123
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+
+  admin-service:
+    image: shreedev44/crud-admin-service
+    container_name: admin-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  user-service:
+    image: shreedev44/crud-user-service
+    container_name: user-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  notification-service:
+    image: shreedev44/crud-notification-service
+    container_name: notification-service
+    depends_on:
+      - admin-service
+
+  frontend-service:
+    image: shreedev44/crud-frontend
+    container_name: frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "5173:5173"

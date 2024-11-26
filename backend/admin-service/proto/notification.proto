@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+
+service NotificationService {
+    rpc NotifyUser (User) returns (Response);
+}
+
+message User {
+    string email = 1;
+}
+
+message Response {
+    bool success = 1;
+    string error = 2;
+}
