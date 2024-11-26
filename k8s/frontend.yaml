@@ -20,6 +20,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 5173
+          envFrom:
+            - configMapRef:
+                name: env-frontend-config
 
 
 ---

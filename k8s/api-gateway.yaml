@@ -20,6 +20,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 4040
+          envFrom:
+            - configMapRef:
+                name: env-api-gateway-config
 
 
 ---

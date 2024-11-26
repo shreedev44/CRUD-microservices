@@ -24,6 +24,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 4042
+          envFrom:
+            - configMapRef:
+                name: env-user-config
 
 
 ---
