@@ -26,6 +26,8 @@ spec:
             - containerPort: 4042
 
 
+---
+
 
 #Service
 apiVersion: v1

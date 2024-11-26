@@ -22,6 +22,8 @@ spec:
             - containerPort: 50051
 
 
+---
+
 
 #Service
 apiVersion: v1

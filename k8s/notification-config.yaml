@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-notification-config
+data:
+  USER_EMAIL: "nm6484670@gmail.com"
+  USER_PASS: "fvpv axcs gzzo kcvp"
